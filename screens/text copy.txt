@@ -1,0 +1,133 @@
+// BluetoothDeviceScreen.js
+
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, Button } from 'react-native';
+import { BleManager, Device } from 'react-native-ble-plx';
+
+const BluetoothDeviceScreen = () => {
+  const [discoveredDevices, setDiscoveredDevices] = useState<Device[]>([]);
+  const [connectedDevice, setConnectedDevice] = useState<Device | null>(null);
+
+  const manager = new BleManager();
+
+  useEffect(() => {
+    // TODO: Implement Bluetooth scanning and connection logic using react-native-ble-plx
+    const subscription = manager.onStateChange((state) => {
+      if (state === 'PoweredOn') {
+        startScan();
+      }
+    }, true);
+
+    return () => {
+      subscription.remove();
+      manager.destroy();
+    };
+  }, []);
+
+  const startScan = async () => {
+    try {
+      const devices = await manager.startDeviceScan(null, null);
+      setDiscoveredDevices(devices);
+    } catch (error) {
+      console.error('Error starting scan:', error);
+    }
+  };
+
+===
+function scanAndConnect() {
+  manager.startDeviceScan(null, null, (error, device) => {
+    if (error) {
+      // Handle error (scanning will be stopped automatically)
+      return
+    }
+
+    // Check if it is a device you are looking for based on advertisement data
+    // or other criteria.
+    if (device.name === 'TI BLE Sensor Tag' || device.name === 'SensorTag') {
+      // Stop scanning as it's not necessary if you are scanning for one device.
+      manager.stopDeviceScan()
+
+      // Proceed with connection.
+    }
+  })
+}
+  const handleConnect = async (device: Device) => {
+    try {
+      await device.connect();
+      setConnectedDevice(device);
+    } catch (error) {
+      console.error('Error connecting:', error);
+    }
+  };
+
+====
+requestBluetoothPermission = async () => {
+  if (Platform.OS === 'ios') {
+    return true
+  }
+  if (Platform.OS === 'android' && PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION) {
+    const apiLevel = parseInt(Platform.Version.toString(), 10)
+
+    if (apiLevel < 31) {
+      const granted = await PermissionsAndroid.request(PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION)
+      return granted === PermissionsAndroid.RESULTS.GRANTED
+    }
+    if (PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN && PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT) {
+      const result = await PermissionsAndroid.requestMultiple([
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_SCAN,
+        PermissionsAndroid.PERMISSIONS.BLUETOOTH_CONNECT,
+        PermissionsAndroid.PERMISSIONS.ACCESS_FINE_LOCATION
+      ])
+
+      return (
+        result['android.permission.BLUETOOTH_CONNECT'] === PermissionsAndroid.RESULTS.GRANTED &&
+        result['android.permission.BLUETOOTH_SCAN'] === PermissionsAndroid.RESULTS.GRANTED &&
+        result['android.permission.ACCESS_FINE_LOCATION'] === PermissionsAndroid.RESULTS.GRANTED
+      )
+    }
+  }
+
+  this.showErrorToast('Permission have not been granted')
+
+  return false
+}
+
+
+  const handleDisconnect = async () => {
+    try {
+      if (connectedDevice) {
+        await connectedDevice.cancelConnection();
+        setConnectedDevice(null);
+      }
+    } catch (error) {
+      console.error('Error disconnecting:', error);
+    }
+  };
+
+  return (
+    <View>
+      <Text>Discovered Devices:</Text>
+      <FlatList
+        data={discoveredDevices}
+        keyExtractor={(item) => item.id}
+        renderItem={({ item }) => (
+          <View>
+            <Text>{item.name}</Text>
+            <Button title="Connect" onPress={() => handleConnect(item)} />
+          </View>
+        )}
+      />
+
+      {connectedDevice && (
+        <View>
+          <Text>Connected Device: {connectedDevice.name}</Text>
+          <Button title="Disconnect" onPress={handleDisconnect} />
+        </View>
+      )}
+
+      <Button title="Scan to Pair" onPress={startScan} />
+    </View>
+  );
+};
+
+export default BluetoothDeviceScreen;
