@@ -40,28 +40,28 @@ export default function App() {
     //     console.log('scan stopped');
     //   },
     // );
-    if (Platform.OS === 'android' && Platform.Version >= 23) {
-      PermissionsAndroid.check(
-        PermissionsAndroid.PERMISSIONS.CAMERA,
+    // if (Platform.OS === 'android' && Platform.Version >= 23) {
+    //   PermissionsAndroid.check(
+    //     PermissionsAndroid.PERMISSIONS.CAMERA,
         
-      ).then(result => {
-        if (result) {
-          console.log(PermissionStatus = 'granted')
-          console.log('Permission is OK');
-        } else {
-          PermissionsAndroid.request(
-            PermissionsAndroid.PERMISSIONS.CAMERA,
-          ).then(result => {
-            if (result) {
-              console.log(PermissionStatus)
-              console.log('User accepted');
-            } else {
-              console.log('User refused');
-            }
-          });
-        }
-      });
-    }
+    //   ).then(result => {
+    //     if (result) {
+    //       console.log(PermissionStatus = 'granted')
+    //       console.log('Permission is OK');
+    //     } else {
+    //       PermissionsAndroid.request(
+    //         PermissionsAndroid.PERMISSIONS.CAMERA,
+    //       ).then(result => {
+    //         if (result) {
+    //           console.log(PermissionStatus)
+    //           console.log('User accepted');
+    //         } else {
+    //           console.log('User refused');
+    //         }
+    //       });
+    //     }
+    //   });
+    // }
     // return () => {
     //   stopDiscoverListener.remove();
     //   stopConnectListener.remove();

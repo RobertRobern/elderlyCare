@@ -21,11 +21,24 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
+      },
+      "permissions": [
+        "android.permission.BLUETOOTH",
+        "android.permission.BLUETOOTH_ADMIN",
+        "android.permission.BLUETOOTH_CONNECT"
+      ],
+      "package": "com.ndolorobern.elderlyCare",
+      "config": {
+        "googleMaps": {
+          "apiKey": "AIzaSyBusoD1EEvJ98ou9fpDNeDo7zBeZYgHTjI"
+        }
       }
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "plugins": ["react-native-ble-plx"]
+    "plugins": [
+      "react-native-ble-plx"
+    ]
   }
 }

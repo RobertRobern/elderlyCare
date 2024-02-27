@@ -1,41 +1,159 @@
-import { View, Text, StyleSheet } from 'react-native'
-import React from 'react'
-import MapView from 'react-native-maps'
+import React, { useRef } from 'react';
+import {
+  StyleSheet,
+  View,
+  Text,
+  Dimensions,
+  TouchableOpacity,
+} from 'react-native';
+import MapView, { MapMarker, Marker } from 'react-native-maps';
+import {
+  runOnJS,
+  useDerivedValue,
+  useSharedValue,
+  withTiming,
+} from 'react-native-reanimated';
 
+const screen = Dimensions.get('window');
+const ASPECT_RATIO = screen.width / screen.height;
+const LATITUDE = 37.78825;
+const LONGITUDE = -122.4324;
+const LATITUDE_DELTA = 0.0922;
+const LONGITUDE_DELTA = LATITUDE_DELTA * ASPECT_RATIO;
 
-export default function Map() {
+const Map = () => {
+  const markerRef = useRef(null);
+  // Shared values for latitude and longitude
+  const latitude = useSharedValue(LATITUDE);
+  const longitude = useSharedValue(LONGITUDE);
+
+  // Function to animate marker position
+  const animateMarkerPosition = () => {
+    const newLatitude = LATITUDE + (Math.random() - 0.5) * (LATITUDE_DELTA / 2);
+    const newLongitude = LONGITUDE + (Math.random() - 0.5) * (LONGITUDE_DELTA / 2);
+
+    latitude.value = withTiming(newLatitude, { duration: 1000 });
+    longitude.value = withTiming(newLongitude, { duration: 1000 });
+  };
+
+  // Derived value to trigger marker updates
+  const updateMarkerPosition = (lat, lng) => {
+    if (markerRef && markerRef.current) {
+      markerRef.current.setNativeProps({
+        coordinate: { latitude: lat, longitude: lng },
+      });
+    }
+  };
+
+  // Use useDerivedValue to react to changes in latitude and longitude
+  useDerivedValue(() => {
+    const lat = latitude.value;
+    const lng = longitude.value;
+    // Use runOnJS to call updateMarkerPosition from the UI thread
+    // runOnJS requires functions to be called with their arguments
+    runOnJS(updateMarkerPosition)(lat, lng);
+  }, [latitude, longitude]);
+
   return (
     <View style={styles.container}>
-      <MapView style={styles.map}
+      <MapView
+        style={styles.map}
         initialRegion={{
-          latitude: 0.07030526143686631,
-          longitude: 34.2870489708059, 
-          latitudeDelta: 0.0922,
-          longitudeDelta: 0.0421,
-        }}
-      />
+          latitude: LATITUDE,
+          longitude: LONGITUDE,
+          latitudeDelta: LATITUDE_DELTA,
+          longitudeDelta: LONGITUDE_DELTA,
+        }}>
+        <Marker
+          ref={markerRef}
+          coordinate={{
+            latitude: LATITUDE,
+            longitude: LONGITUDE,
+          }}
+        />
+      </MapView>
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          onPress={animateMarkerPosition}
+          style={[styles.bubble, styles.button]}>
+          <Text>Animate</Text>
+        </TouchableOpacity>
+      </View>
     </View>
-  )
-}
-
+  );
+};
 
 const styles = StyleSheet.create({
   container: {
-    flex: 1,
-    // backgroundColor: 'blue',
+    ...StyleSheet.absoluteFillObject,
+    justifyContent: 'flex-end',
     alignItems: 'center',
-    justifyContent: 'flex-start',
-  },
-  scroll: {
-    // flex: 1,
-    // backgroundColor: 'blue',
-    // alignItems: 'center',
-    // justifyContent: 'flex-start',
   },
   map: {
-    flex: 1,
-    width: '100%',
-    height: '30%',
+    ...StyleSheet.absoluteFillObject,
   },
-
+  bubble: {
+    flex: 1,
+    backgroundColor: 'rgba(255,255,255,0.7)',
+    paddingHorizontal: 18,
+    paddingVertical: 12,
+    borderRadius: 20,
+  },
+  button: {
+    width: 80,
+    paddingHorizontal: 12,
+    alignItems: 'center',
+    marginHorizontal: 10,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    marginVertical: 20,
+    backgroundColor: 'transparent',
+  },
 });
+
+export default Map;
+
+
+// import { View, Text, StyleSheet } from 'react-native'
+// import React from 'react'
+// import MapView from 'react-native-maps'
+
+// const API_KEY = "AIzaSyBusoD1EEvJ98ou9fpDNeDo7zBeZYgHTjI";
+
+// export default function Map() {
+//   return (
+//     <View style={styles.container}>
+//       <MapView style={styles.map}
+//         initialRegion={{
+//           latitude: 0.07030526143686631,
+//           longitude: 34.2870489708059, 
+//           latitudeDelta: 0.0922,
+//           longitudeDelta: 0.0421,
+//         }}
+//       />
+//     </View>
+//   )
+// }
+
+
+// const styles = StyleSheet.create({
+//   container: {
+//     flex: 1,
+//     // backgroundColor: 'blue',
+//     alignItems: 'center',
+//     justifyContent: 'flex-start',
+//   },
+//   scroll: {
+//     // flex: 1,
+//     // backgroundColor: 'blue',
+//     // alignItems: 'center',
+//     // justifyContent: 'flex-start',
+//   },
+//   map: {
+//     flex: 1,
+//     width: '100%',
+//     height: '30%',
+//   },
+
+// });

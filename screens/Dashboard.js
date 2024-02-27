@@ -7,7 +7,7 @@ import { cardContent } from '../data/card'
 import { dataDoughnut } from '../data/chart'
 import { LineChart, BarChart, PieChart } from "react-native-gifted-charts";
 
-const avatarImage = require('../assets/images/profile.jpg');
+const avatarImage = require('../assets/images/pulse-trace.jpg');
 
 const LineChartData = [
   { value: 15, dataPointText: '15', label: '22 Nov', showXAxisIndex: true },
@@ -40,15 +40,15 @@ const pieChartData = [
     gradientCenterColor: '#006DFF',
     focused: true,
   },
-  {value: 40, color: '#93FCF8', gradientCenterColor: '#3BE9DE'},
-  {value: 16, color: '#BDB2FA', gradientCenterColor: '#8F80F3'},
-  {value: 3, color: '#FFA5BA', gradientCenterColor: '#FF7F97'},
+  { value: 40, color: '#93FCF8', gradientCenterColor: '#3BE9DE' },
+  { value: 16, color: '#BDB2FA', gradientCenterColor: '#8F80F3' },
+  { value: 3, color: '#FFA5BA', gradientCenterColor: '#FF7F97' },
 ];
 const data = [
-  { id: '1', cardTitle: 'Humidity', cardColor: '#6ed6ff', cardReadings: 10, unitOfMeasure: '%', chartType: 'LineChart' },
-  { id: '2', cardTitle: 'Pressure', cardColor: '#ffcc00', cardReadings: 20, unitOfMeasure: '%', chartType: 'BarChart' },
-  { id: '3', cardTitle: 'Pulse Rate', cardColor: '#ff6666', cardReadings: 30, unitOfMeasure: '%', chartType: 'LineChart' },
-  { id: '4', cardTitle: 'Heart Rate', cardColor: '#7dd666', cardReadings: 30, unitOfMeasure: '%', chartType: 'BarChart' },
+  { id: '1', cardTitle: 'Humidity', cardReadings: 10, unitOfMeasure: '%', chartType: 'LineChart' },
+  { id: '2', cardTitle: 'Pressure', cardReadings: 20, unitOfMeasure: 'Pa', chartType: 'BarChart' },
+  { id: '3', cardTitle: 'Temperature', cardReadings: 30, unitOfMeasure: '°F', chartType: 'LineChart' },
+  { id: '4', cardTitle: 'Heart Rate', cardReadings: 30, unitOfMeasure: 'BPM', chartType: 'BarChart' },
 ];
 
 
@@ -63,14 +63,14 @@ const CustomLineChart = () => {
         marginVertical: 2,
         paddingVertical: 5,
         backgroundColor: '#414141',
-        borderRadius: 20,
+        borderRadius: 10,
       }}>
       <LineChart
         isAnimated
         thickness={5}
         color="#07BAD1"
-        width={80}
-        height={100}
+        width={110}
+        height={110}
         maxValue={80}
         noOfSections={4} //Scalling the chart
         // animateOnDataChange
@@ -121,7 +121,7 @@ const CustomBarChart = () => {
         // padding: 16,
         marginVertical: 2,
         paddingVertical: 5,
-        borderRadius: 20,
+        borderRadius: 10,
         backgroundColor: '#232B5D',
       }}>
       {/* <Text style={{color: 'white', fontSize: 16, fontWeight: 'bold'}}>
@@ -130,7 +130,7 @@ const CustomBarChart = () => {
       <View style={{ padding: 5, alignItems: 'flex-start' }}>
         <BarChart
           data={currentData}
-          width={80}
+          width={110}
           height={100}
           barWidth={16}
           initialSpacing={10}
@@ -171,7 +171,7 @@ const CustomPieChart = () => {
 const CustomCard = (props) => {
 
   const {
-    cardColor = '#6ed6ff',
+    cardColor = '#ffff',
     cardTitle = 'Card Title',
     cardReadings = 0,
     unitOfMeasure = '',
@@ -189,12 +189,15 @@ const CustomCard = (props) => {
         }}
       >
         <View style={componentStyles.columnContainer}>
-          <Text white style={textStyle.h4}>{cardTitle}</Text>
 
           {/* Rendering of charts */}
 
-          {chartType == 'LineChart'? <CustomLineChart/> : <CustomBarChart/>}
-          <Text white style={textStyle.h4}>{cardReadings}{unitOfMeasure}</Text>
+          {chartType == 'LineChart' ? <CustomLineChart /> : <CustomBarChart />}
+
+          <View style={{ flex: 1, alignItems: 'center', justifyContent: 'flex-start', }}>
+            <Text style={[textStyle.h4b, { alignItems: 'center' }]}>{cardTitle}</Text>
+            <Text style={textStyle.h5b}>{cardReadings}{unitOfMeasure}</Text>
+          </View>
         </View>
       </Card>
     </>
@@ -346,7 +349,7 @@ export default function Dashboard(props) {
             }}
           >
             <Card.Section flex imageSource={avatarImage}
-              imageStyle={{ width: 150, height: 102 }}
+              imageStyle={{ width: 150, height: 140 }}
               style={{
                 justifyContent: 'center',
               }}
@@ -355,11 +358,11 @@ export default function Dashboard(props) {
               content={[
                 { text: 'Health Score', text70: true, grey10: true },
                 {
-                  text: '222 Join Old The Town Barbershop Official Store. Download the Wix app to...',
+                  text: 'Your Score',
                   text80: true,
                   $textDefault: true
                 },
-                { text: 'wix.to/A465c', text90: true, $textDisabled: true }
+                // { text: 'wix.to/A465c', text90: true, $textDisabled: true }
               ]}
               style={{
                 justifyContent: 'center',

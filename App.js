@@ -18,6 +18,7 @@ import CameraBarcode from './screens/CameraBarcode'
 import Welcome from './screens/Welcome'
 import Login from './screens/auth/Login'
 import Register from './screens/auth/Register'
+import COLORS from './theme/colors'
 
 const Stack = createStackNavigator();
 const AuthStack  = createStackNavigator();
@@ -36,7 +37,8 @@ function MainStack() {
       tabBarLabelStyle: {
         fontSize: 18,
         fontWeight: '900',
-        color: '#0064fa'
+        // color: '#0064fa'.,
+        color: [COLORS.secondary, COLORS.primary]
       },
       tabBarStyle: {
         backgroundColor: "#fff",
@@ -113,8 +115,9 @@ function MyStack() {
         //   width: 240,
         // },
         headerStyle: {
-          backgroundColor: "#0064fa",
+          backgroundColor: "#39B68D",
         },
+        
         tabBarLabelStyle: {
           fontSize: 18,
           fontWeight: '900',
@@ -205,22 +208,26 @@ function MyTab() {
         // },
         
         headerStyle: {
-          backgroundColor: "#0064fa",
+          // backgroundColor: "#0064fa",
+          backgroundColor: '#39B68D'
         },
         tabBarLabelStyle: {
           fontSize: 18,
           fontWeight: '900',
-          // color: '#0064fa'
+          // color: '#fff'
         },
+
         tabBarStyle: {
           backgroundColor: "#fff",
 
         },
-        // tabBarActiveTintColor: "#0064fa",
+        tabBarActiveTintColor: "#0064fa",
+        // tabBarActiveBackgroundColor: "#0064fa",
         // tabBarInactiveTintColor: 'black',
         headerTitleStyle: {
           color: '#fff'
         },
+        
       }}
 
     >

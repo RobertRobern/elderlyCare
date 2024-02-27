@@ -6,6 +6,11 @@ export const textStyle = StyleSheet.create({
     h3: { fontSize: 34, fontWeight: '300', lineHeight: 50 },
     h4: { fontSize: 22, fontWeight: '300', lineHeight: 36 },
     h5: { fontSize: 18, fontWeight: '300', lineHeight: 22 },
+    h1b: { fontSize: 58, fontWeight: 'bold', lineHeight: 80  },
+    h2b: { fontSize: 46, fontWeight: 'bold', lineHeight: 64 },
+    h3b: { fontSize: 34, fontWeight: 'bold', lineHeight: 50 },
+    h4b: { fontSize: 22, fontWeight: 'bold', lineHeight: 36 },
+    h5b: { fontSize: 18, fontWeight: 'bold', lineHeight: 22 },
   });
 
   export const componentStyles = StyleSheet.create({
@@ -20,7 +25,8 @@ export const textStyle = StyleSheet.create({
         flex: 1,
         // alignItems: 'center',
         justifyContent: 'flex-start',
-        padding: 8,
+        // padding: 8,
+        // backgroundColor:"red"
     },
     
 });
@@ -38,7 +44,7 @@ export const cardStyles = StyleSheet.create({
 export const dashboardStyles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#ffff',
+    // backgroundColor: '#ffff',
     alignItems: 'center',
     justifyContent: 'flex-start',
   },
